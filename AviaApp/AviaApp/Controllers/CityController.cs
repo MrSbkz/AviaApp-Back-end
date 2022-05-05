@@ -23,7 +23,7 @@ public class CityController : ControllerBase
     /// <summary>
     /// Returns list of cities by country Id(Admin, Employee, User)
     /// </summary>
-    /// <remarks>Endpoint available for authorized users</remarks>>
+    /// <remarks>Endpoint is available for authorized users</remarks>>
     /// <param name="countryId">Country Id</param>
     [HttpGet]
     [Route("list/{countryId:guid}")]
@@ -37,7 +37,7 @@ public class CityController : ControllerBase
     /// <summary>
     /// Returns city by city Id(Admin, Employee, User)
     /// </summary>
-    /// <remarks>Endpoint available for authorized users</remarks>>
+    /// <remarks>Endpoint is available for authorized users</remarks>>
     /// <param name="cityId">City Id</param>
     [HttpGet]
     [Route("{cityId:guid}")]
@@ -59,7 +59,7 @@ public class CityController : ControllerBase
     /// Adds city(Admin, Employee)
     /// </summary>
     /// <remarks>
-    /// Endpoint available for "admin" and "employee" roles<br/>
+    /// Endpoint is available for "admin" and "employee" roles<br/>
     /// The field "name" is unique for country group
     /// </remarks>>
     [HttpPost]
@@ -81,7 +81,7 @@ public class CityController : ControllerBase
     /// Updates city name(Admin, Employee)
     /// </summary>
     /// <remarks>
-    /// Endpoint available for "admin" and "employee" roles<br/>
+    /// Endpoint is available for "admin" and "employee" roles<br/>
     /// The field "name" is unique for country group
     /// </remarks>>
     [HttpPut]
@@ -103,7 +103,7 @@ public class CityController : ControllerBase
     /// Deletes city(Admin, Employee)
     /// </summary>
     /// <remarks>
-    /// Endpoint available for "admin" and "employee" roles<br/>
+    /// Endpoint is available for "admin" and "employee" roles<br/>
     /// Related objects will also be deleted
     /// </remarks>>
     [HttpDelete("{cityId:guid}")]

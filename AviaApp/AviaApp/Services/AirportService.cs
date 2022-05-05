@@ -29,6 +29,11 @@ public class AirportService : IAirportService
             .Include(x => x.City.Country).ToListAsync());
     }
 
+    public async Task<IList<AirportDto>> GetAllAirportsAsync()
+    {
+        return _mapper.Map<IList<AirportDto>>(await _context.Airports.Include(x => x.City.Country).ToListAsync());
+    }
+
     public async Task<AirportDto> GetAirportByIdAsync(Guid airportId)
     {
         var airport = await GetAirportIfExistsAsync(airportId);

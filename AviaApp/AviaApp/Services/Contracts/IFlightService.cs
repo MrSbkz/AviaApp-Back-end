@@ -16,6 +16,8 @@ public interface IFlightService
 
     Task<FlightViewModel> AddFlightAsync(AddFlightRequest request);
 
+    Task AddFlightsAsync(IList<AddFlightRequest> request);
+
     Task<FlightViewModel> UpdateFlightAsync(UpdateFlightRequest request);
 
     Task DeleteFlightAsync(Guid flightId);

@@ -22,7 +22,7 @@ public class CountryController : ControllerBase
     /// <summary>
     /// Returns list of countries(Admin, Employee, User)
     /// </summary>
-    /// <remarks>Endpoint available for authorized users</remarks>>
+    /// <remarks>Endpoint is available for authorized users</remarks>>
     [HttpGet]
     [Route("list")]
     [Authorize(Roles="admin,employee,user")]
@@ -33,9 +33,9 @@ public class CountryController : ControllerBase
     }
 
     /// <summary>
-    /// Returns country by country Id(Admin, Employee)
+    /// Returns country by country Id(Admin, Employee, User)
     /// </summary>
-    /// <remarks>Endpoint available for authorized users</remarks>>
+    /// <remarks>Endpoint is available for authorized users</remarks>>
     /// <param name="countryId">Country Id</param>
     [HttpGet]
     [Route("{countryId:guid}")]
@@ -57,7 +57,7 @@ public class CountryController : ControllerBase
     /// Adds country(Admin, Employee)
     /// </summary>
     /// <remarks>
-    /// Endpoint available for "admin" and "employee" roles<br/>
+    /// Endpoint is available for "admin" and "employee" roles<br/>
     /// The field "name" is unique
     /// </remarks>>
     [HttpPost]
@@ -79,7 +79,7 @@ public class CountryController : ControllerBase
     /// Updates country name(Admin, Employee)
     /// </summary>
     /// <remarks>
-    /// Endpoint available for "admin" and "employee" roles<br/>
+    /// Endpoint is available for "admin" and "employee" roles<br/>
     /// The field "name" is unique
     /// </remarks>>
     [HttpPut]
@@ -101,7 +101,7 @@ public class CountryController : ControllerBase
     /// Deletes country(Admin, Employee)
     /// </summary>
     /// <remarks>
-    /// Endpoint available for "admin" and "employee" roles<br/>
+    /// Endpoint is available for "admin" and "employee" roles<br/>
     /// Related objects will also be deleted
     /// </remarks>>
     [HttpDelete("{countryId:guid}")]

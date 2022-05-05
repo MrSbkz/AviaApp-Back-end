@@ -24,7 +24,7 @@ public class AirportController : ControllerBase
     /// <summary>
     /// Returns list of airports by city Id(Admin, Employee, User)
     /// </summary>
-    /// <remarks>Endpoint available for authorized users</remarks>>
+    /// <remarks>Endpoint is available for authorized users</remarks>>
     /// <param name="cityId">City Id</param>
     [HttpGet]
     [Route("list/{cityId:guid}")]
@@ -33,6 +33,19 @@ public class AirportController : ControllerBase
     public async Task<IActionResult> GetAirportsAsync(Guid cityId)
     {
         return Ok(await _airportService.GetAirportsAsync(cityId));
+    }
+
+    /// <summary>
+    /// Returns all airports(Auto Job)
+    /// </summary>
+    /// <remarks>Endpoint is not available for users</remarks>>
+    [HttpGet]
+    [Route("list")]
+    [Authorize(Roles = "auto-job")]
+    [ProducesResponseType(typeof(List<AirportDto>), 200)]
+    public async Task<IActionResult> GetAllAirportsAsync()
+    {
+        return Ok(await _airportService.GetAllAirportsAsync());
     }
 
     /// <summary>
@@ -60,7 +73,7 @@ public class AirportController : ControllerBase
     /// Adds airport(Admin, Employee)
     /// </summary>
     /// <remarks>
-    /// Endpoint available for "admin" and "employee" roles<br/>
+    /// Endpoint is available for "admin" and "employee" roles<br/>
     /// The field "name" is unique for city group
     /// </remarks>>
     [HttpPost]
@@ -82,7 +95,7 @@ public class AirportController : ControllerBase
     /// Updates airport name(Admin, Employee)
     /// </summary>
     /// <remarks>
-    /// Endpoint available for "admin" and "employee" roles<br/>
+    /// Endpoint is available for "admin" and "employee" roles<br/>
     /// The field "name" is unique for city group
     /// </remarks>>
     [HttpPut]
@@ -104,7 +117,7 @@ public class AirportController : ControllerBase
     /// Deletes airport(Admin, Employee)
     /// </summary>
     /// <remarks>
-    /// Endpoint available for "admin" and "employee" roles<br/>
+    /// Endpoint is available for "admin" and "employee" roles<br/>
     /// </remarks>>
     [HttpDelete("{airportId:guid}")]
     [Authorize(Roles = "admin,employee")]

@@ -24,7 +24,7 @@ public class FlightController : ControllerBase
     /// Returns list of flights by date range(Admin, Employee)
     /// </summary>
     /// <remarks>
-    /// The endpoint available for admin and employee roles<br/>
+    /// Endpoint is available for admin and employee roles<br/>
     /// "dateFrom" and "dateTo" are nullable
     /// </remarks>
     [HttpGet]
@@ -88,7 +88,7 @@ public class FlightController : ControllerBase
     /// Adds flight(Admin, Employee)
     /// </summary>
     /// <remarks>
-    /// The endpoint available for admin and employee roles
+    /// Endpoint is available for admin and employee roles
     /// </remarks>
     [HttpPost]
     [Authorize(Roles = "admin,employee")]
@@ -106,10 +106,32 @@ public class FlightController : ControllerBase
     }
 
     /// <summary>
+    /// Adds flights(Auto Job)
+    /// </summary>
+    /// <remarks>
+    /// Endpoint is available for admin and employee roles
+    /// </remarks>
+    [HttpPost]
+    [Route("add-list")]
+    [Authorize(Roles = "auto-job")]
+    public async Task<IActionResult> AddFlightsAsync([FromBody] IList<AddFlightRequest> request)
+    {
+        try
+        {
+            await _flightService.AddFlightsAsync(request);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    /// <summary>
     /// Updates flight(Admin, Employee)
     /// </summary>
     /// <remarks>
-    /// The endpoint available for admin and employee roles<br/>
+    /// Endpoint is available for admin and employee roles<br/>
     /// You can change only departure date, arrival date and airplane<br/>
     /// If some field has null value this one will not be changed<br/>
     /// You are not able to update canceled flight
@@ -133,7 +155,7 @@ public class FlightController : ControllerBase
     /// Deletes flight(Admin)
     /// </summary>
     /// <remarks>
-    /// The endpoint available for admin role<br/>
+    /// Endpoint is available for admin role<br/>
     /// </remarks>
     [HttpDelete]
     [Authorize(Roles = "admin")]
@@ -154,7 +176,7 @@ public class FlightController : ControllerBase
     /// Cancels flight(Admin)
     /// </summary>
     /// <remarks>
-    /// The endpoint available for admin role<br/>
+    /// Endpoint is available for admin role<br/>
     /// </remarks>
     [HttpDelete]
     [Route("cancel")]
@@ -173,10 +195,10 @@ public class FlightController : ControllerBase
     }
 
     /// <summary>
-    /// Deletes outdated flights(Admin)
+    /// Deletes outdated flights(Auto Job)
     /// </summary>
     /// <remarks>
-    /// The endpoint available for auto job role<br/>
+    /// The endpoint is available for auto job role<br/>
     /// </remarks>
     [HttpDelete]
     [Route("outdated")]

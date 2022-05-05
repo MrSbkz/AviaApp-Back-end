@@ -77,6 +77,13 @@ public class FlightService : IFlightService
         return await GetFlightByIdAsync(flight.Id);
     }
 
+    public async Task AddFlightsAsync(IList<AddFlightRequest> request)
+    {
+        var flights = _mapper.Map<IList<Flight>>(request);
+        await _context.Flights.AddRangeAsync(flights);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<FlightViewModel> UpdateFlightAsync(UpdateFlightRequest request)
     {
         var flight = await GetFlightIfExistsAsync(request.FlightId);
@@ -118,7 +125,7 @@ public class FlightService : IFlightService
             .Include(x => x.Bookings)
             .Where(x => x.DepartureDateTime < DateTime.Now.Date && !x.Bookings.Any())
             .ToListAsync();
-        
+
         _context.RemoveRange(outdatedFlights);
         await _context.SaveChangesAsync();
     }

@@ -9,6 +9,8 @@ namespace AviaApp.Services.Contracts;
 public interface IAirportService
 {
     Task<IList<AirportDto>> GetAirportsAsync(Guid cityId);
+    
+    Task<IList<AirportDto>> GetAllAirportsAsync();
 
     Task<AirportDto> GetAirportByIdAsync(Guid airportId);
 

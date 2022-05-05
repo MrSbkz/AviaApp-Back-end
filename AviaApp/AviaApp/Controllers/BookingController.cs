@@ -23,7 +23,7 @@ public class BookingController : ControllerBase
     /// Books a flight(Admin, Employee, User)
     /// </summary>
     /// <remarks>
-    /// The endpoint available for admin and employee roles
+    /// Endpoint is available for admin and employee roles
     /// </remarks>
     [HttpPost]
     [Authorize(Roles = "admin,employee,user")]

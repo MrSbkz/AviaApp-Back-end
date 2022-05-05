@@ -24,7 +24,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Returns list of users(Admin, Employee)
     /// </summary>
-    /// <remarks>Endpoint available for "admin" and "employee" roles</remarks>>
+    /// <remarks>Endpoint is available for "admin" and "employee" roles</remarks>>
     [HttpGet]
     [Route("list")]
     [Authorize(Roles = "admin,employee")]
@@ -38,7 +38,7 @@ public class UserController : ControllerBase
     /// Adds new role for user(Admin)
     /// </summary>
     /// <remarks>
-    /// Endpoint available only for "admin" role<br/>
+    /// Endpoint is available only for "admin" role<br/>
     /// If the role is "banned", the user gets banned and has only "banned" role<br/>
     /// If the role is "user", the user gets unbanned and has only "user" role
     /// </remarks>
@@ -61,7 +61,7 @@ public class UserController : ControllerBase
     /// Delete role of user(Admin)
     /// </summary>
     /// <remarks>
-    /// Endpoint available only for "admin" role<br/>
+    /// Endpoint is available only for "admin" role<br/>
     /// It is not possible to delete "banned" or "user" role
     /// </remarks>
     /// <response code="200">The role has been deleted</response>
