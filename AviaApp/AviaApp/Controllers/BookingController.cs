@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using AviaApp.Helpers;
 using AviaApp.Models.Requests;
-using AviaApp.Models.ViewModels;
 using AviaApp.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,7 @@ public class BookingController : ControllerBase
     {
         try
         {
-            await _bookingService.BookFlightAsync(request);
+            await _bookingService.BookFlightAsync(request, HttpContext);
             return Ok();
         }
         catch (Exception e)

@@ -17,8 +17,6 @@ public class BookFlightRequest
 
     public Guid FlightId { get; set; }
 
-    public string BookedBy { get; set; }
-
     public decimal Price { get; set; }
 
     public IList<PassengerRequest> Passengers { get; set; }
