@@ -30,13 +30,13 @@ public class FlightController : ControllerBase
     [HttpGet]
     [Route("list/by-date-range")]
     [Authorize(Roles = "admin,employee")]
-    [ProducesResponseType(typeof(List<FlightViewModel>), 200)]
-    public async Task<IActionResult> GetFlightsByDateRangeAsync([FromQuery] DateTime? dateFrom,
-        [FromQuery] DateTime? dateTo)
+    [ProducesResponseType(typeof(PageFlightViewModel), 200)]
+    public async Task<IActionResult> GetFlightsByDateRangeAsync(DateTime? dateFrom,
+        DateTime? dateTo, int currentPage = 1, int pageSize = 20)
     {
         try
         {
-            return Ok(await _flightService.GetFlightsByDateRangeAsync(dateFrom, dateTo));
+            return Ok(await _flightService.GetFlightsByDateRangeAsync(dateFrom, dateTo, currentPage, pageSize));
         }
         catch (Exception e)
         {
