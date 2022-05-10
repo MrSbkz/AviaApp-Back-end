@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AviaApp.Models;
 using AviaApp.Models.Requests;
 using AviaApp.Models.ViewModels;
 using AviaApp.Services.Contracts;
@@ -25,7 +26,8 @@ public class FlightService : IFlightService
         _cabinClassService = cabinClassService;
     }
 
-    public async Task<IList<FlightViewModel>> GetFlightsByDateRangeAsync(DateTime? dateFrom, DateTime? dateTo)
+    public async Task<PageFlightViewModel> GetFlightsByDateRangeAsync(DateTime? dateFrom, DateTime? dateTo,
+        int currentPage, int pageSize)
     {
         dateFrom ??= DateTime.MinValue;
         dateTo ??= DateTime.MaxValue;
@@ -36,18 +38,31 @@ public class FlightService : IFlightService
                 x.DepartureDateTime.Date >= dateFrom.Value.Date && x.ArrivalDateTime.Date <= dateTo.Value.Date)
             .ToListAsync();
 
-        return _mapper.Map<IList<FlightViewModel>>(flights);
+        var pageInfo = new PageInfo
+        {
+            CurrentPage = currentPage,
+            PageSize = pageSize,
+            TotalItems = flights.Count
+        };
+
+        var sortedFlights = flights.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+
+        return new PageFlightViewModel
+        {
+            PageInfo = pageInfo,
+            Flights = _mapper.Map<IList<FlightViewModel>>(sortedFlights)
+        };
     }
 
     public async Task<IList<FlightViewModel>> SearchFlightsAsync(SearchFlightRequest request)
     {
-        var flightsByFromParameters = await GetFlightsFromBySearchParametersAsync(request.CountryIdFrom,
+        var flightsFromByParameters = await GetFlightsFromBySearchParametersAsync(request.CountryIdFrom,
             request.CityIdFrom, request.AirportIdFrom, request.FlightDateTime);
 
-        var flightsByToParameters = await GetFlightsToBySearchParametersAsync(request.CountryIdTo,
+        var flightsToByParameters = await GetFlightsToBySearchParametersAsync(request.CountryIdTo,
             request.CityIdTo, request.AirportIdTo, request.FlightDateTime);
 
-        var flights = flightsByFromParameters.Where(x => flightsByToParameters.Any(y => y.Id.Equals(x.Id))).ToList();
+        var flights = flightsFromByParameters.Where(x => flightsToByParameters.Any(y => y.Id.Equals(x.Id))).ToList();
 
         await SetPricesAsync(flights, request.CabinClassId);
 

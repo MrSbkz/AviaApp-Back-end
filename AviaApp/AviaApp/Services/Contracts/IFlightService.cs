@@ -8,7 +8,8 @@ namespace AviaApp.Services.Contracts;
 
 public interface IFlightService
 {
-    Task<IList<FlightViewModel>> GetFlightsByDateRangeAsync(DateTime? dateFrom, DateTime? dateTo);
+    Task<PageFlightViewModel> GetFlightsByDateRangeAsync(DateTime? dateFrom, DateTime? dateTo,
+        int currentPage = 1, int pageSize = 30);
 
     Task<IList<FlightViewModel>> SearchFlightsAsync(SearchFlightRequest request);
 
