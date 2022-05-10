@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AviaApp.Enums;
+using AviaApp.Helpers;
 using AviaApp.Models;
 using AviaApp.Models.Dto;
 using AviaApp.Services.Contracts;
@@ -77,5 +78,27 @@ public class UserController : ControllerBase
         return result.Status.Equals(Status.Error, StringComparison.OrdinalIgnoreCase)
             ? BadRequest(result)
             : Ok(result);
+    }
+
+    /// <summary>
+    /// Returns role list
+    /// </summary>
+    /// <remarks>
+    /// Endpoint is available for authorized users<br/>
+    /// </remarks>
+    [HttpGet]
+    [Route("roles")]
+    [Authorize]
+    [ProducesResponseType(typeof(IList<string>), 200)]
+    public IActionResult GetRoles()
+    {
+        try
+        {
+            return Ok(HttpContextHelper.GetRolesFromContext(HttpContext));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }
