@@ -55,6 +55,7 @@ public class AuthService : IAuthService
         return new LoginResponse
         {
             Token = new JwtSecurityTokenHandler().WriteToken(token),
+            // TODO: Remove roles later
             Roles = userRoles,
         };
     }
