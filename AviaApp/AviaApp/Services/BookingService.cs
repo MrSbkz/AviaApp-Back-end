@@ -50,11 +50,21 @@ public class BookingService : IBookingService
 
     public async Task CancelBookingAsync(Guid bookingId)
     {
-        var booking = await _context.Bookings.FirstOrDefaultAsync(x => x.Id == bookingId);
+        var booking = await _context.Bookings.Include(x => x.Passengers).FirstOrDefaultAsync(x => x.Id == bookingId);
         if (booking is null)
             throw new Exception("The booking is not found");
 
         booking.IsCanceled = true;
+        if (booking.Passengers != null)
+        {
+            var cancelDate = DateTime.Now;
+            foreach (var passenger in booking.Passengers)
+            {
+                passenger.IsCanceled = true;
+                passenger.CancelDate = cancelDate;
+            }
+        }
+
         _context.Bookings.Update(booking);
         await _context.SaveChangesAsync();
     }
@@ -66,7 +76,16 @@ public class BookingService : IBookingService
             throw new Exception("The passenger is not found");
 
         passenger.IsCanceled = true;
+        passenger.CancelDate = DateTime.Now;
         _context.Passengers.Update(passenger);
+
+        var booking = await _context.Bookings.Include(x => x.Passengers).FirstAsync(x => x.Id == passenger.BookingId);
+        if (booking.Passengers!.All(x => x.IsCanceled))
+        {
+            booking.IsCanceled = true;
+            _context.Bookings.Update(booking);
+        }
+
         await _context.SaveChangesAsync();
     }
 }
