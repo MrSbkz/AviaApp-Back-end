@@ -1,10 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AviaApp.Models.Requests;
-using Microsoft.AspNetCore.Http;
 
 namespace AviaApp.Services.Contracts;
 
 public interface IBookingService
 {
-    Task BookFlightAsync(BookFlightRequest request, HttpContext context);
+    Task BookFlightAsync(BookFlightRequest request, string bookedBy);
+
+    Task CancelBookingAsync(Guid bookingId);
+
+    Task CancelBookingForPassengerAsync(Guid passengerId);
 }

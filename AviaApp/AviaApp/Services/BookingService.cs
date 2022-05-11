@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,7 +7,7 @@ using AviaApp.Models.Requests;
 using AviaApp.Services.Contracts;
 using Data;
 using Data.Entities;
-using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace AviaApp.Services;
 
@@ -16,36 +15,58 @@ public class BookingService : IBookingService
 {
     private readonly AviaAppDbContext _context;
     private readonly IMapper _mapper;
+    private readonly ICabinClassService _cabinClassService;
 
-    public BookingService(AviaAppDbContext context, IMapper mapper)
+    public BookingService(
+        AviaAppDbContext context,
+        IMapper mapper,
+        ICabinClassService cabinClassService)
     {
         _context = context;
         _mapper = mapper;
+        _cabinClassService = cabinClassService;
     }
 
-    public async Task BookFlightAsync(BookFlightRequest request, HttpContext context)
+    public async Task BookFlightAsync(BookFlightRequest request, string bookedBy)
     {
         if (!request.Passengers.Any())
             throw new Exception("Must have at least one passenger");
 
-        if (!_context.Flights.Any(x => x.Id == request.FlightId))
+        var flight = await _context.Flights.FirstOrDefaultAsync(x => x.Id == request.FlightId);
+        if (flight is null)
             throw new Exception("This flight does not exist");
 
-        var email = HttpContextHelper.GetEmailFromContext(context);
+        var cabinClass = await _cabinClassService.GetByIdAsync(request.CabinClassId);
 
         var booking = _mapper.Map<Booking>(request);
         booking.Id = Guid.NewGuid();
         booking.BookingDate = DateTime.Now;
-        booking.BookedBy = email;
+        booking.BookedBy = bookedBy;
+        booking.Price = PriceHelper.GetPrice(flight.Price, cabinClass.PricePerCent);
 
-        var passengers = _mapper.Map<List<Passenger>>(request.Passengers);
-        foreach (var passenger in passengers)
-        {
-            passenger.BookingId = booking.Id;
-        }
-
-        await _context.Passengers.AddRangeAsync(passengers);
         await _context.Bookings.AddAsync(booking);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task CancelBookingAsync(Guid bookingId)
+    {
+        var booking = await _context.Bookings.FirstOrDefaultAsync(x => x.Id == bookingId);
+        if (booking is null)
+            throw new Exception("The booking is not found");
+
+        booking.IsCanceled = true;
+        _context.Bookings.Update(booking);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task CancelBookingForPassengerAsync(Guid passengerId)
+    {
+        var passenger = await _context.Passengers.FirstOrDefaultAsync(x => x.Id == passengerId);
+        if (passenger is null)
+            throw new Exception("The passenger is not found");
+
+        passenger.IsCanceled = true;
+        _context.Passengers.Update(passenger);
         await _context.SaveChangesAsync();
     }
 }

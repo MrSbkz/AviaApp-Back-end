@@ -15,9 +15,9 @@ public class BookFlightRequest
 
     public string PostalCode { get; set; }
 
-    public Guid FlightId { get; set; }
+    public int CabinClassId { get; set; }
 
-    public decimal Price { get; set; }
+    public Guid FlightId { get; set; }
 
     public IList<PassengerRequest> Passengers { get; set; }
 }

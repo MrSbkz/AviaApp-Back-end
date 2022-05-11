@@ -24,7 +24,11 @@ public class Booking
 
     public decimal Price { get; set; }
 
+    public int CabinClassId { get; set; }
+
     public Flight? Flight { get; set; }
 
     public IList<Passenger>? Passengers { get; set; }
+
+    public CabinClass? CabinClass { get; set; }
 }

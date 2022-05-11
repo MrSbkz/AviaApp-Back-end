@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AviaApp.Helpers;
 using AviaApp.Models;
 using AviaApp.Models.Requests;
 using AviaApp.Models.ViewModels;
@@ -171,13 +172,8 @@ public class FlightService : IFlightService
 
         foreach (var flight in flights)
         {
-            flight.Price = GetPrice(flight.Price, cabinClass.PricePerCent);
+            flight.Price = PriceHelper.GetPrice(flight.Price, cabinClass.PricePerCent);
         }
-    }
-
-    private decimal GetPrice(decimal price, int pricePerCent)
-    {
-        return price + (price / 100 * pricePerCent);
     }
 
     private async Task<IList<Flight>> GetFlightsToBySearchParametersAsync(
