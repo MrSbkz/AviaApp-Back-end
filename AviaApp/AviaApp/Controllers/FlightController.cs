@@ -97,7 +97,8 @@ public class FlightController : ControllerBase
     {
         try
         {
-            return Ok(await _flightService.AddFlightAsync(request));
+            await _flightService.AddFlightAsync(request);
+            return Ok();
         }
         catch (Exception e)
         {

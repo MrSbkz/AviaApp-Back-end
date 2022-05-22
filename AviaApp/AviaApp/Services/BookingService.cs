@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AviaApp.Helpers;
 using AviaApp.Models.Requests;
+using AviaApp.Models.ViewModels;
 using AviaApp.Services.Contracts;
 using Data;
 using Data.Entities;
@@ -87,5 +89,18 @@ public class BookingService : IBookingService
         }
 
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<IList<BookingViewModel>> GetBookingsByEmailAsync(string email)
+    {
+        var bookings = await _context.Bookings
+            .Include(x => x.Passengers)
+            .Include(x => x.CabinClass)
+            .Include(x => x.Flight.AirportFrom.City.Country)
+            .Include(x => x.Flight.AirportTo.City.Country)
+            .Where(x => x.BookedBy.Equals(email) && !x.Flight.IsCanceled)
+            .ToListAsync();
+
+        return _mapper.Map<IList<BookingViewModel>>(bookings);
     }
 }
