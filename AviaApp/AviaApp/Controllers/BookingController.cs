@@ -42,6 +42,27 @@ public class BookingController : ControllerBase
     }
 
     /// <summary>
+    /// Gets bookings(Admin, Employee, User)
+    /// </summary>
+    /// <remarks>
+    /// Endpoint is available for admin, employee and user roles
+    /// </remarks>
+    [HttpGet]
+    [Authorize(Roles = "admin,employee,user")]
+    public async Task<IActionResult> GetBookingsAsync()
+    {
+        try
+        {
+            var email = HttpContextHelper.GetEmailFromContext(HttpContext);
+            return Ok(await _bookingService.GetBookingsByEmailAsync(email));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    /// <summary>
     /// Cancels a booking(Admin, Employee, User)
     /// </summary>
     /// <remarks>
